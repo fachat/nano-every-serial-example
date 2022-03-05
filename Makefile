@@ -9,7 +9,7 @@ LDFLAGS=-Wl,-u,vfprintf -lprintf_flt
 
 MCU_CC=-mmcu=atmega4809
 
-all: serial.hex blink.hex serial_with_int.hex
+all: serial.hex blink.hex serial_with_int.hex timer.hex
 
 %.hex: %.elf
 	avr-objcopy -j .data -j .text -O ihex $< $@
@@ -27,6 +27,10 @@ load_serial_with_int: serial_with_int.hex reset
 load_serial: serial.hex reset
 	avrdude -C ./avrdude.conf -c jtag2updi -P $(SERIAL) -p atmega4809 -u \
 		-U flash:w:serial.hex:i
+
+load_timer: timer.hex reset
+	avrdude -C ./avrdude.conf -c jtag2updi -P $(SERIAL) -p atmega4809 -u \
+		-U flash:w:timer.hex:i
 
 load_blink: blink.hex reset
 	avrdude -C ./avrdude.conf -c jtag2updi -P $(SERIAL) -p atmega4809 -u \
